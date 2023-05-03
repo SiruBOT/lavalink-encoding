@@ -114,3 +114,28 @@ test('can decode Google track', () => {
 	const decoded = decode(googleTrack);
 	expect(decoded).toStrictEqual(googleTrackInfo);
 });
+
+const spotifyInfo = {
+  flags: 1,
+  version: 2,
+  title: "追憶",
+  author: "PIKASONIC",
+  length: 249000n,
+  identifier: "2K3vp2sZJrIrZJ4b4jHACg",
+  isStream: false,
+  uri: "https://open.spotify.com/track/2K3vp2sZJrIrZJ4b4jHACg",
+  source: "spotify",
+  position: 0n,
+  spotifyInfo: {
+    ISRC: "TCJPP2155112",
+    thumbnail:
+      "https://i.scdn.co/image/ab67616d0000b2735a15fcec9b64c3f87eb4c9d0",
+  },
+};
+
+const spotifyTrack = 'QAAA0AIABui/veaGtgAJUElLQVNPTklDAAAAAAADzKgAFjJLM3ZwMnNaSnJJclpKNGI0akhBQ2cAAQA1aHR0cHM6Ly9vcGVuLnNwb3RpZnkuY29tL3RyYWNrLzJLM3ZwMnNaSnJJclpKNGI0akhBQ2cAB3Nwb3RpZnkBAAxUQ0pQUDIxNTUxMTIBAEBodHRwczovL2kuc2Nkbi5jby9pbWFnZS9hYjY3NjE2ZDAwMDBiMjczNWExNWZjZWM5YjY0YzNmODdlYjRjOWQwAAAAAAAAAAA=';
+
+test('can decode Spotify track', () => {
+	const decoded = decode(spotifyTrack);
+	expect(decoded).toStrictEqual(spotifyInfo);
+});

@@ -13,6 +13,7 @@ export interface TrackInfo {
     uri: string | null;
     version?: number;
     probeInfo?: { raw: string, name: string, parameters: string | null };
+    spotifyInfo?: {  ISRC: string | null, thumbnail: string | null };
 }
 
 const TRACK_INFO_VERSIONED = 1;
@@ -27,6 +28,20 @@ function parseProbeInfo(track: Pick<TrackInfo, 'probeInfo'>, input: DataInput) {
     track.probeInfo = { raw: probeInfo, name, parameters };
 }
 
+function parseSpotifyInfo(track: Pick<TrackInfo, "spotifyInfo">, input: DataInput) {
+    /***
+     *  Ref: com.sedmelluq.discord.lavaplayer.tools.DataFormatTools.java
+     *  Line: 141-155
+     *  writeNullableText(output, text);
+     *  writeNullableText  -> if text is null, write 0, else write 1 and write text
+     *  https://github.com/sedmelluq/lavaplayer/blob/707771af705b14ecc0c0ca4b5e5b6546e85f4b1c/main/src/main/java/com/sedmelluq/discord/lavaplayer/tools/DataFormatTools.java#LL141C1-L155C4
+     */
+    track.spotifyInfo = {
+        ISRC: input.readBoolean() ? input.readUTF() : null,
+        thumbnail: input.readBoolean() ? input.readUTF() : null
+    };
+}
+
 function writeProbeInfo(track: Pick<TrackInfo, 'probeInfo'>, output: DataOutput) {
     if(typeof track.probeInfo === "object") {
         output.writeUTF(track.probeInfo.raw || "<no probe info provided>");
@@ -38,9 +53,10 @@ function writeProbeInfo(track: Pick<TrackInfo, 'probeInfo'>, output: DataOutput)
 // source manager name -> reader
 // should either read the data into the track or
 // discard it, so the position can be safely read.
-const sourceReaders: { [key: string]: typeof parseProbeInfo | undefined } = {
+const sourceReaders: { [key: string]: typeof parseProbeInfo | typeof parseSpotifyInfo | undefined } = {
     http: parseProbeInfo,
-    local: parseProbeInfo
+    local: parseProbeInfo,
+    spotify: parseSpotifyInfo,
 };
 
 const sourceWriters: { [key: string]: typeof writeProbeInfo | undefined } = {

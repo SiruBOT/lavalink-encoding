@@ -1,6 +1,6 @@
 {
-  "name": "@lavalink/encoding",
-  "version": "0.1.2",
+  "name": "@sirubot/encoding",
+  "version": "0.1.2-spotify",
   "description": "Encode & decode lavaplayer tracks locally",
   "main": "dist/src/index.js",
   "typings": "typings/src/index.d.ts",
